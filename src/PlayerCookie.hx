@@ -47,22 +47,13 @@ class PlayerCookie {
 		data = makeNewData();
 		load();
 		data.nbLaunch++;
-		forceFullUnlock();
+		forceUnlockLevels();
 	}
 
-	function forceFullUnlock() {
+	function forceUnlockLevels() {
 		data.unlocked = "FULL_UNLOCK";
 		data.lastLevelNormal = data.lastLevelHard = data.lastLevelEpic = 100;
-		data.wonNormal = data.wonHard = data.wonEpic = true;
 		data.unlockedHard = true;
-		data.ratedUs = true;
-		data.shirtColor = 1;
-		data.stripeColor = 2;
-		for(i in 1...101) {
-			data.normalStars.set(i, 3);
-			data.hardStars.set(i, 3);
-			data.epicStars.set(i, 3);
-		}
 		save();
 	}
 
@@ -188,14 +179,14 @@ class PlayerCookie {
 
 
 	function makeNewData() : PlayerData {
-		var data : PlayerData = {
+		return {
 			unlocked	: "FULL_UNLOCK",
 			lastLevelNormal	: 100,
 			lastLevelHard	: 100,
 			lastLevelEpic	: 100,
-			shirtColor	: 1,
+			shirtColor	: 0,
 			pantColor	: 0,
-			stripeColor	: 2,
+			stripeColor	: 0,
 			music		: true,
 			sfx			: true,
 			crowdSfx	: true,
@@ -204,23 +195,16 @@ class PlayerCookie {
 			lang		: getDefaultLang(),
 			nbLaunch	: 0,
 			leftHanded	: null,
-			ratedUs		: true,
+			ratedUs		: false,
 			tutoFlags	: new Map(),
-			wonNormal	: true,
-			wonHard		: true,
-			wonEpic		: true,
+			wonNormal	: false,
+			wonHard		: false,
+			wonEpic		: false,
 			unlockedHard: true,
 			normalStars	: new Map(),
 			hardStars	: new Map(),
 			epicStars	: new Map(),
 		}
-		// Fill all stars to 3
-		for(i in 1...101) {
-			data.normalStars.set(i, 3);
-			data.hardStars.set(i, 3);
-			data.epicStars.set(i, 3);
-		}
-		return data;
 	}
 
 	public function toString() {
