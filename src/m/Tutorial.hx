@@ -336,12 +336,12 @@ class Tutorial extends mt.deepnight.FProcess {
 		hideMessage();
 		cd.set("click", 5);
 
-		var w = Std.int(getWidth()/1.8);
+		var w = Std.int(getWidth()/3.2);
 		var s = new Sprite();
 
 		var f = new flash.text.TextFormat();
 		f.font = Global.ME.getFont().id;
-		f.size = 11;
+		f.size = 9;
 		f.color = 0xffffff;
 		var tf = new flash.text.TextField();
 		tf.width = 300;
@@ -358,9 +358,9 @@ class Tutorial extends mt.deepnight.FProcess {
 			tf.setTextFormat(f2);
 			tf.defaultTextFormat = f2;
 		}
-		tf.width = w-5;
-		tf.height = MLib.fmin(MLib.fmax(tf.textHeight+4, 22), 28);
-		tf.x = Std.int(w*0.5 - tf.textWidth*0.5);
+		tf.width = w-4;
+		tf.height = MLib.fmin(MLib.fmax(tf.textHeight+3, 16), 22);
+		tf.x = 2;
 		tf.filters = [
 			new flash.filters.GlowFilter(0x0,1, 2,2,5),
 		];
@@ -372,7 +372,7 @@ class Tutorial extends mt.deepnight.FProcess {
 		];
 
 		curMsg = Lib.flatten(s, 1);
-		curMsg.bitmapData = Lib.scaleBitmap(curMsg.bitmapData, 1.5, true);
+		curMsg.bitmapData = Lib.scaleBitmap(curMsg.bitmapData, 1.2, true);
 		wrapper.addChild(curMsg);
 		curMsg.x = -2;
 		curMsg.y = getHeight();

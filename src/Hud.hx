@@ -16,7 +16,7 @@ class Hud {
 	public var wrapper		: Sprite;
 	var chronoField			: TextField;
 	var chronoBg			: BSprite;
-	var scoreTarget			: Bitmap;
+	var scoreTarget			: TextField;
 	var timeWarning			: Bitmap;
 	var twChronoSet			: Bool;
 
@@ -56,13 +56,26 @@ class Hud {
 		chronoField = game.createField("0:00", FTime);
 		wrapper.addChild(chronoField);
 		chronoField.filters = [];
-		chronoField.scaleX = chronoField.scaleY = 2;
+		chronoField.scaleX = chronoField.scaleY = 1.5;
 		chronoField.mouseEnabled = false;
 
-		scoreTarget = new Bitmap( new BitmapData(200, 22, true, 0x0) );
+		// Score text field (direct, not bitmap)
+		var f = new flash.text.TextFormat();
+		f.font = "small";
+		f.size = 12;
+		f.color = 0xffffff;
+		scoreTarget = new flash.text.TextField();
+		scoreTarget.width = 200;
+		scoreTarget.height = 20;
+		scoreTarget.mouseEnabled = scoreTarget.selectable = false;
+		scoreTarget.defaultTextFormat = f;
+		scoreTarget.embedFonts = true;
+		scoreTarget.filters = [
+			new flash.filters.GlowFilter(0x0,1, 2,2,5),
+		];
 		wrapper.addChild(scoreTarget);
 		scoreTarget.x = 5;
-		scoreTarget.y = 3;
+		scoreTarget.y = 2;
 		updateScore();
 
 		// Menu button
@@ -146,7 +159,6 @@ class Hud {
 		button0.dispose();
 
 		timeWarning.bitmapData.dispose(); timeWarning.bitmapData = null;
-		scoreTarget.bitmapData.dispose(); scoreTarget.bitmapData = null;
 	}
 
 
@@ -164,7 +176,7 @@ class Hud {
 		chronoField.text = mins+":"+mt.deepnight.Lib.leadingZeros(sec,2);
 		chronoField.x = Std.int( chronoBg.x + chronoBg.width*0.5 - chronoField.textWidth*chronoField.scaleX*0.5 - 3 );
 
-		if( chronoField.scaleX!=2 && mins==0 && sec<=20 )
+		if( chronoField.scaleX!=1.5 && mins==0 && sec<=20 )
 			chronoField.textColor = 0xFF8600;
 
 		if( mins<=0 && sec>0 ) {
@@ -196,12 +208,7 @@ class Hud {
 
 
 	function updateScore() {
-		var tf = m.Global.ME.createField(Lang.ScoreTarget({ _cur:game.score, _target:game.getScoreTarget() }), FSmall, true);
-		tf.filters = [];
-		tf.scaleX = tf.scaleY = 1;
-		tf.y = 0;
-		scoreTarget.bitmapData.fillRect( scoreTarget.bitmapData.rect, 0x0 );
-		scoreTarget.bitmapData.draw(tf, tf.transform.matrix);
+		scoreTarget.text = Lang.ScoreTarget({ _cur:game.score, _target:game.getScoreTarget() });
 	}
 
 
