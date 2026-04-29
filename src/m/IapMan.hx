@@ -219,10 +219,7 @@ class IapMan extends mt.deepnight.Process {
 	}
 
 	public function isUnlocked() {
-		if ( Global.ME.playerCookie.data.unlocked != "" ) {
-			return Global.ME.playerCookie.data.unlocked == mkUnlockValue();
-		}
-		return false;
+		return true; // FULL UNLOCK - all features available
 	}
 
 	public function buy(success, fail, cancel) {
