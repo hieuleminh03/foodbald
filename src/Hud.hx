@@ -16,7 +16,8 @@ class Hud {
 	public var wrapper		: Sprite;
 	var chronoField			: TextField;
 	var chronoBg			: BSprite;
-	var scoreTarget			: TextField;
+	var scoreTf				: TextField;
+	var scoreBg				: Sprite;
 	var timeWarning			: Bitmap;
 	var twChronoSet			: Bool;
 
@@ -59,23 +60,33 @@ class Hud {
 		chronoField.scaleX = chronoField.scaleY = 1.5;
 		chronoField.mouseEnabled = false;
 
-		// Score text field (direct, not bitmap)
+		// Score bg (simple rounded rect like time bg)
+		scoreBg = new Sprite();
+		scoreBg.graphics.beginFill(0x1D2F41, 0.9);
+		scoreBg.graphics.drawRoundRect(0,0, 90, 20, 6, 6);
+		scoreBg.graphics.lineStyle(1, 0x464095, 1);
+		scoreBg.graphics.drawRoundRect(0,0, 90, 20, 6, 6);
+		wrapper.addChild(scoreBg);
+		scoreBg.x = 3;
+		scoreBg.y = 2;
+
+		// Score text field
 		var f = new flash.text.TextFormat();
 		f.font = "small";
 		f.size = 12;
 		f.color = 0xffffff;
-		scoreTarget = new flash.text.TextField();
-		scoreTarget.width = 200;
-		scoreTarget.height = 20;
-		scoreTarget.mouseEnabled = scoreTarget.selectable = false;
-		scoreTarget.defaultTextFormat = f;
-		scoreTarget.embedFonts = true;
-		scoreTarget.filters = [
+		scoreTf = new flash.text.TextField();
+		scoreTf.width = 90;
+		scoreTf.height = 20;
+		scoreTf.mouseEnabled = scoreTf.selectable = false;
+		scoreTf.defaultTextFormat = f;
+		scoreTf.embedFonts = true;
+		scoreTf.filters = [
 			new flash.filters.GlowFilter(0x0,1, 2,2,5),
 		];
-		wrapper.addChild(scoreTarget);
-		scoreTarget.x = 5;
-		scoreTarget.y = 2;
+		wrapper.addChild(scoreTf);
+		scoreTf.x = 3;
+		scoreTf.y = 2;
 		updateScore();
 
 		// Menu button
@@ -208,7 +219,7 @@ class Hud {
 
 
 	function updateScore() {
-		scoreTarget.text = Lang.ScoreTarget({ _cur:game.score, _target:game.getScoreTarget() });
+		scoreTf.text = "Score: " + game.score + " / " + game.getScoreTarget();
 	}
 
 
