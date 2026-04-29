@@ -104,15 +104,16 @@ class Hud {
 	function makeLabel(str:String) : TextField {
 		var f = new flash.text.TextFormat();
 		f.font = m.Global.ME.getFont().id;
-		f.size = 10;
+		f.size = 14;
 		f.color = 0xffffff;
 		var tf = new flash.text.TextField();
 		tf.width = 120;
-		tf.height = 22;
+		tf.height = 28;
 		tf.mouseEnabled = tf.selectable = false;
 		tf.defaultTextFormat = f;
 		tf.embedFonts = true;
 		tf.text = str;
+		tf.scaleX = tf.scaleY = 1.3;
 		tf.filters = [
 			new flash.filters.GlowFilter(0x0,1, 2,2,5),
 		];
