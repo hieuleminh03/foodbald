@@ -17,7 +17,7 @@ class Hud {
 	var chronoField			: TextField;
 	var chronoBg			: BSprite;
 	var scoreTf				: TextField;
-	var scoreBg				: Sprite;
+	var scoreBg				: BSprite;
 	var timeWarning			: Bitmap;
 	var twChronoSet			: Bool;
 
@@ -47,46 +47,25 @@ class Hud {
 		wrapper.addChild(timeWarning);
 		timeWarning.visible = false;
 
-
 		// Timer bg
 		chronoBg = game.tiles.get("bgTime");
 		wrapper.addChild(chronoBg);
 		chronoBg.mouseChildren = chronoBg.mouseEnabled = false;
 		chronoBg.scaleX = chronoBg.scaleY = 2;
 
-		chronoField = game.createField("0:00", FTime);
+		chronoField = makeLabel("0:00");
 		wrapper.addChild(chronoField);
-		chronoField.filters = [];
-		chronoField.scaleX = chronoField.scaleY = 1.5;
 		chronoField.mouseEnabled = false;
 
-		// Score bg (simple rounded rect like time bg)
-		scoreBg = new Sprite();
-		scoreBg.graphics.beginFill(0x1D2F41, 0.9);
-		scoreBg.graphics.drawRoundRect(0,0, 90, 20, 6, 6);
-		scoreBg.graphics.lineStyle(1, 0x464095, 1);
-		scoreBg.graphics.drawRoundRect(0,0, 90, 20, 6, 6);
+		// Score bg (same as time)
+		scoreBg = game.tiles.get("bgTime");
 		wrapper.addChild(scoreBg);
-		scoreBg.x = 3;
-		scoreBg.y = 2;
+		scoreBg.mouseChildren = scoreBg.mouseEnabled = false;
+		scoreBg.scaleX = scoreBg.scaleY = 2;
 
-		// Score text field
-		var f = new flash.text.TextFormat();
-		f.font = "small";
-		f.size = 12;
-		f.color = 0xffffff;
-		scoreTf = new flash.text.TextField();
-		scoreTf.width = 90;
-		scoreTf.height = 20;
-		scoreTf.mouseEnabled = scoreTf.selectable = false;
-		scoreTf.defaultTextFormat = f;
-		scoreTf.embedFonts = true;
-		scoreTf.filters = [
-			new flash.filters.GlowFilter(0x0,1, 2,2,5),
-		];
+		scoreTf = makeLabel("");
 		wrapper.addChild(scoreTf);
-		scoreTf.x = 3;
-		scoreTf.y = 2;
+		scoreTf.mouseEnabled = false;
 		updateScore();
 
 		// Menu button
@@ -122,6 +101,24 @@ class Hud {
 		onResize();
 	}
 
+	function makeLabel(str:String) : TextField {
+		var f = new flash.text.TextFormat();
+		f.font = m.Global.ME.getFont().id;
+		f.size = 10;
+		f.color = 0xffffff;
+		var tf = new flash.text.TextField();
+		tf.width = 120;
+		tf.height = 22;
+		tf.mouseEnabled = tf.selectable = false;
+		tf.defaultTextFormat = f;
+		tf.embedFonts = true;
+		tf.text = str;
+		tf.filters = [
+			new flash.filters.GlowFilter(0x0,1, 2,2,5),
+		];
+		return tf;
+	}
+
 	public inline function setPassButton() {
 		button0.set("buttonShoot");
 	}
@@ -146,6 +143,9 @@ class Hud {
 		chronoBg.x = Std.int( menuBt.x  - 5 - chronoBg.width );
 		chronoBg.y = 0;
 
+		scoreBg.x = 3;
+		scoreBg.y = 2;
+
 		if( side0!=null ) {
 			side0.width = 200;
 			side0.height = game.getHeight()*1.2;
@@ -166,6 +166,7 @@ class Hud {
 		wrapper.parent.removeChild(wrapper);
 
 		chronoBg.dispose();
+		scoreBg.dispose();
 		menuBt.dispose();
 		button0.dispose();
 
@@ -185,10 +186,12 @@ class Hud {
 		if( mins<0 ) mins = 0;
 		if( sec<0 ) sec = 0;
 		chronoField.text = mins+":"+mt.deepnight.Lib.leadingZeros(sec,2);
-		chronoField.x = Std.int( chronoBg.x + chronoBg.width*0.5 - chronoField.textWidth*chronoField.scaleX*0.5 - 3 );
+		chronoField.x = Std.int( chronoBg.x + chronoBg.width*0.5 - chronoField.textWidth*0.5 - 3 );
 
-		if( chronoField.scaleX!=1.5 && mins==0 && sec<=20 )
+		if( mins==0 && sec<=20 )
 			chronoField.textColor = 0xFF8600;
+		else
+			chronoField.textColor = 0xffffff;
 
 		if( mins<=0 && sec>0 ) {
 			timeWarning.x = chronoField.x - timeWarning.width*0.5;
@@ -219,7 +222,9 @@ class Hud {
 
 
 	function updateScore() {
-		scoreTf.text = "Score: " + game.score + " / " + game.getScoreTarget();
+		scoreTf.text = game.score + " / " + game.getScoreTarget();
+		scoreTf.x = Std.int( scoreBg.x + scoreBg.width*0.5 - scoreTf.textWidth*0.5 - 3 );
+		scoreTf.y = scoreBg.y + 1;
 	}
 
 
