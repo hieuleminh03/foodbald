@@ -16,7 +16,7 @@ class Hud {
 	public var wrapper		: Sprite;
 	var chronoField			: TextField;
 	var chronoBg			: BSprite;
-	var scoreTf				: TextField;
+	var scoreTarget			: Bitmap;
 	var timeWarning			: Bitmap;
 	var twChronoSet			: Bool;
 
@@ -53,20 +53,16 @@ class Hud {
 		chronoBg.mouseChildren = chronoBg.mouseEnabled = false;
 		chronoBg.scaleX = chronoBg.scaleY = 2;
 
-		chronoField = game.createField("0:00", FSmall);
+		chronoField = game.createField("0:00", FTime);
 		wrapper.addChild(chronoField);
 		chronoField.filters = [];
-		chronoField.scaleX = chronoField.scaleY = 1.5;
+		chronoField.scaleX = chronoField.scaleY = 2;
 		chronoField.mouseEnabled = false;
 
-		scoreTf = game.createField("", FSmall, true);
-		scoreTf.filters = [
-			new flash.filters.GlowFilter(0x0,1, 2,2,5),
-		];
-		scoreTf.scaleX = scoreTf.scaleY = 1.2;
-		wrapper.addChild(scoreTf);
-		scoreTf.x = 5;
-		scoreTf.y = 2;
+		scoreTarget = new Bitmap( new BitmapData(200, 22, true, 0x0) );
+		wrapper.addChild(scoreTarget);
+		scoreTarget.x = 5;
+		scoreTarget.y = 3;
 		updateScore();
 
 		// Menu button
@@ -110,15 +106,6 @@ class Hud {
 		button0.set("buttonTacle");
 	}
 
-	//function onButtonPress(_) {
-		//game.onMouseDown(null);
-	//}
-//
-	//function onButtonRelease(_) {
-		//game.onMouseUp(null);
-	//}
-
-
 	function onMenu() {
 		game.onMenu();
 	}
@@ -127,7 +114,6 @@ class Hud {
 	public function onResize() {
 		chronoField.y = 2;
 
-		//menuBt.width = menuBt.height = MLib.fmax( Metrics.cm2px(1) / Const.UPSCALE, game.getHeight()*0.1 );
 		menuBt.x = game.getWidth() - 35;
 		menuBt.y = 3;
 
@@ -160,9 +146,7 @@ class Hud {
 		button0.dispose();
 
 		timeWarning.bitmapData.dispose(); timeWarning.bitmapData = null;
-
-		//button0.removeEventListener( flash.events.MouseEvent.MOUSE_DOWN, onButtonPress );
-		//button0.removeEventListener( flash.events.MouseEvent.MOUSE_UP, onButtonRelease );
+		scoreTarget.bitmapData.dispose(); scoreTarget.bitmapData = null;
 	}
 
 
@@ -180,7 +164,7 @@ class Hud {
 		chronoField.text = mins+":"+mt.deepnight.Lib.leadingZeros(sec,2);
 		chronoField.x = Std.int( chronoBg.x + chronoBg.width*0.5 - chronoField.textWidth*chronoField.scaleX*0.5 - 3 );
 
-		if( chronoField.scaleX!=1.5 && mins==0 && sec<=20 )
+		if( chronoField.scaleX!=2 && mins==0 && sec<=20 )
 			chronoField.textColor = 0xFF8600;
 
 		if( mins<=0 && sec>0 ) {
@@ -212,7 +196,12 @@ class Hud {
 
 
 	function updateScore() {
-		scoreTf.text = Lang.ScoreTarget({ _cur:game.score, _target:game.getScoreTarget() });
+		var tf = m.Global.ME.createField(Lang.ScoreTarget({ _cur:game.score, _target:game.getScoreTarget() }), FSmall, true);
+		tf.filters = [];
+		tf.scaleX = tf.scaleY = 1;
+		tf.y = 0;
+		scoreTarget.bitmapData.fillRect( scoreTarget.bitmapData.rect, 0x0 );
+		scoreTarget.bitmapData.draw(tf, tf.transform.matrix);
 	}
 
 
@@ -225,10 +214,5 @@ class Hud {
 			button0.alpha += (0.2-button0.alpha)*0.2;
 
 		button0.x = m.Global.ME.playerCookie.data.leftHanded ? BMARGIN : game.getWidth()-button0.width-BMARGIN;
-
-		//if( game.matchStarted() && game.isPlaying() )
-			//chronoBg.alpha = chronoField.alpha = 1;
-		//else
-			//chronoBg.alpha = chronoField.alpha = 0.3;
 	}
 }
