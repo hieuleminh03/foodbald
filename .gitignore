@@ -1,0 +1,27 @@
+# Node / Vite rewrite artifacts
+node_modules/
+package.json
+package-lock.json
+tsconfig.json
+vite.config.ts
+
+# Vite build output
+dist/
+
+# Server (unused)
+server/
+
+# Extracted assets (duplicates of assets/)
+public/
+assets/extracted/
+
+# IDE
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Temp files
+/tmp/
+nohup.out
