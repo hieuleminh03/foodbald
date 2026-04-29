@@ -336,20 +336,34 @@ class Tutorial extends mt.deepnight.FProcess {
 		hideMessage();
 		cd.set("click", 5);
 
-		var w = Std.int(getWidth()/2.5);
+		var w = Std.int(getWidth()/1.8);
 		var s = new Sprite();
-		var tf = Global.ME.createField(msg,FSmall);
+
+		var f = new flash.text.TextFormat();
+		f.font = Global.ME.getFont().id;
+		f.size = 11;
+		f.color = 0xffffff;
+		var tf = new flash.text.TextField();
+		tf.width = 300;
+		tf.height = 50;
+		tf.mouseEnabled = tf.selectable = false;
+		tf.defaultTextFormat = f;
+		tf.embedFonts = true;
+		tf.text = msg;
+		tf.multiline = tf.wordWrap = true;
 		s.addChild(tf);
 		if( !Global.ME.getFont().cyrillic ) {
-			var f = tf.getTextFormat();
-			f.leading = -3;
-			tf.setTextFormat(f);
-			tf.defaultTextFormat = f;
+			var f2 = tf.getTextFormat();
+			f2.leading = -2;
+			tf.setTextFormat(f2);
+			tf.defaultTextFormat = f2;
 		}
-		tf.multiline = true;
 		tf.width = w-5;
-		tf.height = MLib.fmax(tf.textHeight+5, 18);
+		tf.height = MLib.fmin(MLib.fmax(tf.textHeight+4, 22), 28);
 		tf.x = Std.int(w*0.5 - tf.textWidth*0.5);
+		tf.filters = [
+			new flash.filters.GlowFilter(0x0,1, 2,2,5),
+		];
 
 		s.graphics.beginFill(0x312D68, 1);
 		s.graphics.drawRect(0,0, w, tf.height);

@@ -16,8 +16,9 @@ class Hud {
 	public var wrapper		: Sprite;
 	var chronoField			: TextField;
 	var chronoBg			: BSprite;
-	var scoreTarget			: Bitmap;
+	var scoreTf				: TextField;
 	var timeWarning			: Bitmap;
+	var twChronoSet			: Bool;
 
 	var menuBt				: BSprite;
 	public var button0		: BSprite;
@@ -27,6 +28,7 @@ class Hud {
 
 	public function new() {
 		game = m.Game.ME;
+		twChronoSet = false;
 
 		wrapper = new Sprite();
 		game.gdm.add(wrapper, Const.DP_INTERF);
@@ -51,16 +53,20 @@ class Hud {
 		chronoBg.mouseChildren = chronoBg.mouseEnabled = false;
 		chronoBg.scaleX = chronoBg.scaleY = 2;
 
-		chronoField = game.createField("0:00", FTime);
+		chronoField = game.createField("0:00", FSmall);
 		wrapper.addChild(chronoField);
 		chronoField.filters = [];
-		chronoField.scaleX = chronoField.scaleY = 3;
+		chronoField.scaleX = chronoField.scaleY = 1.5;
 		chronoField.mouseEnabled = false;
 
-		scoreTarget = new Bitmap( new BitmapData(200, 25, true, 0x0) );
-		wrapper.addChild(scoreTarget);
-		scoreTarget.x = 5;
-		scoreTarget.y = 5;
+		scoreTf = game.createField("", FSmall, true);
+		scoreTf.filters = [
+			new flash.filters.GlowFilter(0x0,1, 2,2,5),
+		];
+		scoreTf.scaleX = scoreTf.scaleY = 1.2;
+		wrapper.addChild(scoreTf);
+		scoreTf.x = 5;
+		scoreTf.y = 2;
 		updateScore();
 
 		// Menu button
@@ -174,7 +180,7 @@ class Hud {
 		chronoField.text = mins+":"+mt.deepnight.Lib.leadingZeros(sec,2);
 		chronoField.x = Std.int( chronoBg.x + chronoBg.width*0.5 - chronoField.textWidth*chronoField.scaleX*0.5 - 3 );
 
-		if( chronoField.scaleX!=3 && mins==0 && sec<=20 )
+		if( chronoField.scaleX!=1.5 && mins==0 && sec<=20 )
 			chronoField.textColor = 0xFF8600;
 
 		if( mins<=0 && sec>0 ) {
@@ -184,26 +190,29 @@ class Hud {
 				timeWarning.visible = true;
 				timeWarning.alpha = 1;
 				game.tw.create(timeWarning.alpha, 0, TEaseIn, 600);
-				game.tw.create(chronoField.y, chronoField.y-4, TLoop, 200);
+				if( !twChronoSet ) {
+					twChronoSet = true;
+					game.tw.create(chronoField.y, chronoField.y-4, TLoop, 200);
+				}
 				m.Global.SBANK.compte_a_rebour(0.2 + 0.8*(1-sec/10));
 			}
 			else if( sec<=20 ) {
+				twChronoSet = false;
 				game.tw.terminateWithoutCallbacks(timeWarning.alpha);
+				game.tw.terminateWithoutCallbacks(chronoField.y);
 				timeWarning.visible = true;
 				timeWarning.alpha = 0.6;
 				game.tw.create(timeWarning.alpha, 0, TEaseIn, 300);
 			}
+		} else {
+			twChronoSet = false;
+			game.tw.terminateWithoutCallbacks(chronoField.y);
 		}
 	}
 
 
 	function updateScore() {
-		var tf = m.Global.ME.createField(Lang.ScoreTarget({ _cur:game.score, _target:game.getScoreTarget() }), FBig, true);
-		tf.filters = [];
-		tf.scaleX = tf.scaleY = 2;
-		tf.y = -9;
-		scoreTarget.bitmapData.fillRect( scoreTarget.bitmapData.rect, 0x0 );
-		scoreTarget.bitmapData.draw(tf, tf.transform.matrix);
+		scoreTf.text = Lang.ScoreTarget({ _cur:game.score, _target:game.getScoreTarget() });
 	}
 
 

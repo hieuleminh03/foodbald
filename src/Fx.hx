@@ -18,7 +18,7 @@ class Fx {
 
 	public function new() {
 		cd = new mt.Cooldown();
-		FParticle.LIMIT = 150;
+		FParticle.LIMIT = 80;
 		game = m.Game.ME;
 		lowq = false;
 		pool = new BitmapDataPool();

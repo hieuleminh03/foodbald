@@ -289,7 +289,7 @@ class Global extends FProcess {
 		switch(font) {
 			case FSmall : f.font = "small"; f.size = 16;
 			case FBig : f.font = getFont().id; f.size = getFont().size; str = StringTools.replace(str, " ", "  ");
-			case FTime : f.font = "time"; f.size = 8;
+			case FTime : f.font = getFont().id; f.size = 10;
 		}
 		f.color = 0xffffff;
 
