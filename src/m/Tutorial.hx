@@ -336,19 +336,19 @@ class Tutorial extends mt.deepnight.FProcess {
 		hideMessage();
 		cd.set("click", 5);
 
-		var w = getWidth()/2;
+		var w = Std.int(getWidth()/2.5);
 		var s = new Sprite();
-		var tf = Global.ME.createField(msg,FBig);
+		var tf = Global.ME.createField(msg,FSmall);
 		s.addChild(tf);
 		if( !Global.ME.getFont().cyrillic ) {
 			var f = tf.getTextFormat();
-			f.leading = -6;
+			f.leading = -3;
 			tf.setTextFormat(f);
 			tf.defaultTextFormat = f;
 		}
 		tf.multiline = true;
 		tf.width = w-5;
-		tf.height = MLib.fmax(tf.textHeight+5, 23);
+		tf.height = MLib.fmax(tf.textHeight+5, 18);
 		tf.x = Std.int(w*0.5 - tf.textWidth*0.5);
 
 		s.graphics.beginFill(0x312D68, 1);
@@ -358,7 +358,7 @@ class Tutorial extends mt.deepnight.FProcess {
 		];
 
 		curMsg = Lib.flatten(s, 1);
-		curMsg.bitmapData = Lib.scaleBitmap(curMsg.bitmapData, 2, true);
+		curMsg.bitmapData = Lib.scaleBitmap(curMsg.bitmapData, 1.5, true);
 		wrapper.addChild(curMsg);
 		curMsg.x = -2;
 		curMsg.y = getHeight();
